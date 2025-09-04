@@ -5,7 +5,7 @@ import TimerControls from './TimerControls'
 const Timer = () => {
   const timerRef = useRef(null)
   const [time, setTime] = useState(() => {
-    const stored = localStorage.getItem("time") || 0
+    const stored = localStorage.getItem("time")
     return stored !== null ? Number(stored) : 0
   })
   const [isRunning, setIsRunning] = useState(false)
