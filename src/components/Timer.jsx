@@ -1,11 +1,22 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import TimerDisplay from './TimerDisplay'
 import TimerControls from './TimerControls'
 
 const Timer = () => {
   const timerRef = useRef(null)
-  const [time, setTime] = useState(0)
+  const [time, setTime] = useState(() => {
+    const stored = localStorage.getItem("time") || 0
+    return stored !== null ? Number(stored) : 0
+  })
   const [isRunning, setIsRunning] = useState(false)
+
+  useEffect(() => {
+    if (time === null) {
+      localStorage.removeItem("time")
+    } else {
+      localStorage.setItem("time", time)
+    }
+  }, [time])
 
   const toggleTimer = () => {
     if (isRunning) {
@@ -25,13 +36,13 @@ const Timer = () => {
   const resetTimer = () => {
     clearInterval(timerRef.current)
     setIsRunning(false)
-    setTime(0)
+    setTime(null)
     timerRef.current = null
   }
 
   return (
     <>
-      <TimerDisplay time={time} />
+      <TimerDisplay time={time ?? 0} />
       <TimerControls onToggle={toggleTimer}
         isRunning={isRunning}
         onReset={resetTimer} />
